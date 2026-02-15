@@ -36,6 +36,11 @@ app.use(cors({
   origin: "*",
 }));
 
+app.get("/", (req, res) => {
+  res.send("Poll API is running");
+});
+
+
 // socket
 io.on("connection", (socket) => {
 
