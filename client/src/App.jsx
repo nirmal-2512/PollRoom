@@ -15,9 +15,9 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route element={<AppLayout />}>
+            <Route path="/" element={<Dashboard />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/" element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/create" element={<CreatePoll />} />
             <Route path="/poll/:id" element={<PollRoom />} />

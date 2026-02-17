@@ -1,25 +1,32 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  // ✅ SAFE localStorage parsing (prevents crashes)
   const [user, setUser] = useState(() => {
-    return JSON.parse(localStorage.getItem("user"));
+    try {
+      const saved = localStorage.getItem("user");
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
   });
 
-  useEffect(() => {
-    const savedUser = localStorage.getItem("user");
-    if (savedUser) setUser(JSON.parse(savedUser));
-  }, []);
-
+  // ✅ LOGIN
   const login = (data) => {
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("user", JSON.stringify(data.user));
-    setUser(data.user);
+    const userData = {
+      ...data.user,
+      token: data.token, // ⭐ store token INSIDE user
+    };
+
+    localStorage.setItem("user", JSON.stringify(userData));
+    setUser(userData);
   };
 
+  // ✅ LOGOUT
   const logout = () => {
-    localStorage.clear();
+    localStorage.removeItem("user"); // safer than clear()
     setUser(null);
   };
 
@@ -30,4 +37,5 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
+// ✅ Custom hook
 export const useAuth = () => useContext(AuthContext);
