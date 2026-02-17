@@ -25,7 +25,6 @@ app.use(express.json());
 // roustes
 const authRoutes = require("./routes/authRoutes");
 const pollRoutes = require("./routes/pollRoutes");
-const voteRoutes = require("./routes/voteRoutes");
 const cors = require("cors");
 
 app.use(cors({
@@ -35,7 +34,6 @@ app.use(cors({
 
 app.use("/api/auth", authRoutes);
 app.use("/api/polls", pollRoutes);
-app.use("/api/votes", voteRoutes);
 
 
 app.get("/", (req, res) => {
