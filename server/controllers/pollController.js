@@ -46,31 +46,39 @@ exports.votePoll = async (req, res) => {
 };
 
 
-
-// CREATE POLL (Protected)
 exports.createPoll = async (req, res) => {
   try {
     const { question, options } = req.body;
 
-    if (!question || options.length < 2) {
+    // ✅ Validate input FIRST
+    if (!question || !options || options.length < 2) {
       return res.status(400).json({
-        message: "Provide a question and at least 2 options"
+        message: "Question and at least 2 options required",
       });
     }
 
-    // Remove duplicates (nice senior touch)
-    const uniqueOptions = [...new Set(options)];
+    if (!req.user) {
+      return res.status(401).json({
+        message: "Not authorized",
+      });
+    }
 
     const poll = await Poll.create({
       question,
-      options: uniqueOptions,
-      createdBy: req.user
+      options: options.map((opt) => ({
+        text: opt,
+        votes: 0,
+      })),
+      user: req.user._id,
     });
 
     res.status(201).json(poll);
 
   } catch (err) {
-    res.status(500).json({ message: "Server error" });
+    console.error("CREATE POLL ERROR:", err); // ⭐ IMPORTANT
+    res.status(500).json({
+      message: "Server error while creating poll",
+    });
   }
 };
 
