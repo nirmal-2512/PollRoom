@@ -54,6 +54,15 @@ const Login = () => {
         >
           Login
         </button>
+        <p className="text-sm text-center">
+          New User?? Create an account.{" "}
+          <Link
+            to="/register"
+            className="text-blue-600 font-medium hover:underline"
+          >
+            Login
+          </Link>
+        </p>
       </form>
     </div>
   );
