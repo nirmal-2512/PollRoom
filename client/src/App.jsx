@@ -6,6 +6,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import CreatePoll from "./pages/CreatePoll";
 import PollRoom from "./pages/PollRoom";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 import "./index.css";
 
@@ -15,11 +16,33 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route element={<AppLayout />}>
-            <Route path="/" element={<Dashboard />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/create" element={<CreatePoll />} />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/create"
+              element={
+                <ProtectedRoute>
+                  <CreatePoll />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/poll/:id" element={<PollRoom />} />
           </Route>
         </Routes>

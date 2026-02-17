@@ -12,7 +12,7 @@ const {
 
 
 // create poll (protected)
-router.post("/polls", auth, createPoll);
+router.post("/", auth, createPoll);
 
 // my polls
 router.get("/my", auth, getMyPolls);
