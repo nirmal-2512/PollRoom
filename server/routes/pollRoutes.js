@@ -10,7 +10,7 @@ const {
 } = require("../controllers/pollController");
 
 
-router.post("/", protect, createPoll);
+router.post("/", createPoll);
 router.get("/my", auth, getMyPolls);
 
 
