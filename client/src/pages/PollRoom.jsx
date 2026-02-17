@@ -19,18 +19,31 @@ const PollRoom = () => {
   };
 
   useEffect(() => {
+    const [hasVoted, setHasVoted] = useState(false);
+
+    if (localStorage.getItem(`voted_${id}`)) {
+      setHasVoted(true);
+    }
+
     fetchPoll();
   }, []);
 
   const vote = async (optionIndex) => {
+    const alreadyVoted = localStorage.getItem(`voted_${id}`);
+
+    if (alreadyVoted) {
+      alert("You already voted!");
+      return;
+    }
+
     try {
       await api.post(`/api/polls/${id}/vote`, {
         optionIndex,
       });
 
-      localStorage.setItem(`voted_${id}`, true);
+      localStorage.setItem(`voted_${id}`, "true");
 
-      fetchPoll(); // refresh results
+      fetchPoll();
     } catch (err) {
       alert(err.response?.data?.message || "Voting failed");
     }
@@ -51,10 +64,8 @@ const PollRoom = () => {
             key={i}
             disabled={alreadyVoted}
             onClick={() => vote(i)}
-            className={`w-full p-3 rounded-lg border 
-              ${
-                alreadyVoted ? "bg-gray-200" : "hover:bg-blue-50 cursor-pointer"
-              }`}
+            className={`w-full p-3 rounded-lg border transition
+    ${alreadyVoted ? "bg-gray-200 cursor-not-allowed" : "hover:bg-blue-50"}`}
           >
             {opt.text} — {opt.votes} votes
           </button>
