@@ -1,6 +1,5 @@
 const Poll = require("../models/Poll");
 
-// ✅ VOTE CONTROLLER
 exports.votePoll = async (req, res) => {
   try {
     const poll = await Poll.findById(req.params.id);
@@ -19,7 +18,6 @@ exports.votePoll = async (req, res) => {
       });
     }
 
-    // ✅ Prevent multiple votes from same IP
     if (!poll.voters) poll.voters = [];
 
     if (poll.voters.includes(req.ip)) {
@@ -30,7 +28,6 @@ exports.votePoll = async (req, res) => {
 
     poll.voters.push(req.ip);
 
-    // ✅ Increment vote
     poll.options[optionIndex].votes += 1;
 
     await poll.save();
@@ -45,21 +42,19 @@ exports.votePoll = async (req, res) => {
   }
 };
 
-
 exports.createPoll = async (req, res) => {
   try {
     const { question, options } = req.body;
 
-    // ✅ Validate input FIRST
-    if (!question || !options || options.length < 2) {
-      return res.status(400).json({
-        message: "Question and at least 2 options required",
-      });
-    }
-
     if (!req.user) {
       return res.status(401).json({
         message: "Not authorized",
+      });
+    }
+
+    if (!question || !options || options.length < 2) {
+      return res.status(400).json({
+        message: "Provide question and at least 2 options",
       });
     }
 
@@ -69,38 +64,42 @@ exports.createPoll = async (req, res) => {
         text: opt,
         votes: 0,
       })),
-      user: req.user._id,
+      user: req.user._id, // ⭐ CRITICAL LINE
     });
 
     res.status(201).json(poll);
 
   } catch (err) {
-    console.error("CREATE POLL ERROR:", err); // ⭐ IMPORTANT
+    console.error("CREATE POLL ERROR:", err);
     res.status(500).json({
-      message: "Server error while creating poll",
+      message: "Server error",
     });
   }
 };
 
 
 
-// GET MY POLLS (Dashboard)
 exports.getMyPolls = async (req, res) => {
   try {
-    const polls = await Poll
-      .find({ createdBy: req.user })
-      .sort({ createdAt: -1 });
+
+    console.log("LOGGED USER:", req.user);
+
+    const polls = await Poll.find({
+      user: req.user._id,
+    }).sort({ createdAt: -1 });
 
     res.json(polls);
 
-  } catch {
-    res.status(500).json({ message: "Server error" });
+  } catch (err) {
+    console.error("GET MY POLLS ERROR:", err);
+
+    res.status(500).json({
+      message: "Server error",
+    });
   }
 };
 
 
-
-// PUBLIC — View Poll by ID
 exports.getPollById = async (req, res) => {
   try {
     const poll = await Poll.findById(req.params.id);

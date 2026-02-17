@@ -43,7 +43,7 @@ const PollRoom = () => {
 
   return (
     <div className="max-w-xl mx-auto mt-10 bg-white p-8 rounded-2xl shadow">
-      <h1 className="text-2xl font-bold mb-6">{poll.question}</h1>
+      <h1 className="text-2xl font-bold mb-6 text-black">{poll.question}</h1>
 
       <div className="space-y-3">
         {poll.options.map((opt, i) => (
