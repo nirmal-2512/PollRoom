@@ -10,11 +10,10 @@ const {
 } = require("../controllers/pollController");
 
 
-// Protected
-router.post("/", auth, createPoll);
+router.post("/", protect, createPoll);
 router.get("/my", auth, getMyPolls);
 
-// Public
+
 router.get("/:id", getPollById);
 
 module.exports = router;

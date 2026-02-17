@@ -5,7 +5,7 @@ import { socket } from "../socket/socket";
 import { getVoterId } from "../utils/getVoterId";
 import Results from "../components/Results";
 
-const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API = import.meta.env.VITE_API_URL;
 
 const PollRoom = () => {
   const { id: pollId } = useParams();
@@ -105,11 +105,15 @@ const PollRoom = () => {
   if (!poll) {
     return <div style={{ padding: "40px" }}>Loading poll...</div>;
   }
+  const shareUrl = `${window.location.origin}/poll/${poll._id}`;
+  const copyLink = async () => {
+    await navigator.clipboard.writeText(shareUrl);
+    alert("Link copied!");
+  };
 
   return (
     <div className="bg-white max-w-2xl mx-auto p-8 rounded-2xl shadow space-y-6">
       <h1>{poll.question}</h1>
-
       {poll.options.map((option, index) => {
         const voteObj = results.find((r) => r.option === option);
 
@@ -159,15 +163,13 @@ const PollRoom = () => {
           </div>
         );
       })}
-
-      {hasVoted && <Results results={results} />}
-      ${percent > 50 ? "bg-green-600" : "bg-green-400"}
-
+      {hasVoted && <Results results={results} />}$
+      {percent > 50 ? "bg-green-600" : "bg-green-400"}
       {hasVoted && (
         <p style={{ color: "green" }}>✅ Your vote has been recorded</p>
       )}
-
       <p>Total votes: {totalVotes}</p>
+      <button onClick={copyLink}>Copy Link</button>
     </div>
   );
 };
