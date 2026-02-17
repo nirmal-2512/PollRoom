@@ -13,7 +13,6 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // ✅ Redirect logged-in users
   if (user) {
     return <Navigate to="/dashboard" replace />;
   }
@@ -23,7 +22,6 @@ const Register = () => {
 
     setError("");
 
-    // ✅ Frontend validation
     if (!email || !password) {
       setError("Please fill all fields");
       return;

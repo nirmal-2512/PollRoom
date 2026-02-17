@@ -28,13 +28,15 @@ const pollRoutes = require("./routes/pollRoutes");
 const voteRoutes = require("./routes/voteRoutes");
 const cors = require("cors");
 
+app.use(cors({
+  origin: "*",
+}));
+
+
 app.use("/api/auth", authRoutes);
 app.use("/api/polls", pollRoutes);
 app.use("/api/votes", voteRoutes);
 
-app.use(cors({
-  origin: "*",
-}));
 
 app.get("/", (req, res) => {
   res.send("Poll API is running");
