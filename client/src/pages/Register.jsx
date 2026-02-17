@@ -97,7 +97,7 @@ const Register = () => {
         </button>
 
         {/* LOGIN LINK */}
-        <p className="text-sm text-center">
+        <p className="text-sm text-center text-black">
           Already have an account?{" "}
           <Link
             to="/login"
